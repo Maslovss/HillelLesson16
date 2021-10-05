@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- hosts: master
+  become: yes
   vars:
     - delete_docker: true
     - delete_docker_data: false
@@ -11,7 +12,10 @@
 
   tasks:
     - name: Install Docker
-      command: "curl -fsSL https://get.docker.com | sh"
+      shell:
+        cmd: |
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sh get-docker.sh
 
     - name: Install  kubelet kubeadm kubectl
       shell:

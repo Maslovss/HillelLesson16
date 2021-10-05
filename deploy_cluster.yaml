@@ -1,0 +1,58 @@
+---
+- hosts: master
+  become: yes
+  vars:
+    - master_hostname: "k8s-master.local"
+    - restart_host: false
+    - reset_cluster: true
+
+  tasks:
+    - set_fact:
+        pod_cidr: "{{ lookup('file', 'terraform.tfvars')  | regex_search('pods_cidr_block.+=(.+)\".*', '\\1') | first | replace('\"','') | trim }}"
+
+
+    - name: display the contents of the 'pod_cidr' variable
+      debug:
+        var: pod_cidr
+
+    - name: Set hostname
+      shell:
+        cmd: |
+          hostnamectl set-hostname  {{ master_hostname }}
+          sed -i 's/127.0.0.1 localhost/127.0.0.1 localhost {{ master_hostname }}/' /etc/hosts
+
+    - name: Tune sysconf
+      shell:
+        cmd: |
+          echo "net.bridge.bridge-nf-call-ip6tables = 1" >> /etc/sysctl.conf
+          echo "net.bridge.bridge-nf-call-iptables = 1" >> /etc/sysctl.conf
+          echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+          echo "br_netfilter" >> /etc/modules
+          echo "overlay" >> /etc/modules
+
+    - name: Wait for server to restart
+      reboot:
+        reboot_timeout: 3600
+      when: restart_host|bool == true
+
+    - name: Reset cluster
+      command: "kubeadm reset --force"
+
+    - name: Create cluster
+      shell:
+        cmd: |
+          kubeadm init --pod-network-cidr={{pod_cidr}}
+          mkdir -p $HOME/.kube
+          cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+          chown $(id -u):$(id -g) $HOME/.kube/config
+          export KUBECONFIG=/etc/kubernetes/admin.conf
+          curl https://docs.projectcalico.org/manifests/calico.yaml -O
+          kubectl apply -f calico.yaml
+
+    - name: Create join token
+      command: "kubeadm token create --print-join-command"
+      register: join_cluster_command
+
+
+
+
