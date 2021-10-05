@@ -1,15 +1,6 @@
 ---
-- hosts: master
+- hosts: all
   become: yes
-  vars:
-    - delete_docker: true
-    - delete_docker_data: false
-    - install_docker: true
-    - perform_reboot: true
-    - jenkins_run_container: true
-    - jenkins_image_name: "jenkins/jenkins:latest"
-    - jenkins_folder: "/var/jenkins"
-
   tasks:
     - name: Install Docker
       shell:
@@ -45,3 +36,12 @@
           systemctl enable docker
           systemctl daemon-reload
           systemctl restart docker
+
+    - name: Tune sysconf
+      shell:
+        cmd: |
+          echo "net.bridge.bridge-nf-call-ip6tables = 1" >> /etc/sysctl.conf
+          echo "net.bridge.bridge-nf-call-iptables = 1" >> /etc/sysctl.conf
+          echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+          echo "br_netfilter" >> /etc/modules
+          echo "overlay" >> /etc/modules
