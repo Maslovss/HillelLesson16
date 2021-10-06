@@ -3,7 +3,7 @@ resource "aws_ebs_volume" "volumes" {
 
   for_each  =  var.kube_workers 
 
-  availability_zone = "${aws_subnet.public_subnet.availability_zone}"
+  availability_zone = lookup( aws_subnet.subnets , each.value.subnet ).availability_zone
   size              = each.value.ebs_drive_size
 }
 

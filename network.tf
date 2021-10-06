@@ -11,16 +11,18 @@ resource "aws_vpc" "vpc" {
 }
 
 
-resource "aws_subnet" "public_subnet" {
+resource "aws_subnet" "subnets" {
   depends_on = [
-    aws_vpc.vpc,
+    aws_vpc.vpc
   ]
 
-  vpc_id     = aws_vpc.vpc.id
-  cidr_block = var.networking.subnet_address
+  for_each  =  var.subnets 
 
-  availability_zone_id = var.networking.availability_zone_id
-  map_public_ip_on_launch = true
+  vpc_id     = aws_vpc.vpc.id
+  cidr_block = each.value.cidr_block
+
+  availability_zone_id = each.value.availability_zone_id
+  map_public_ip_on_launch = each.value.public
 
 
   tags = var.tags  
@@ -58,12 +60,14 @@ resource "aws_route_table" "IG_route_table" {
   }
 }
 
-# associate route table to public subnet
 resource "aws_route_table_association" "associate_routetable_to_public_subnet" {
   depends_on = [
-    aws_subnet.public_subnet,
+    aws_subnet.subnets,
     aws_route_table.IG_route_table,
   ]
-  subnet_id      = aws_subnet.public_subnet.id
+
+  for_each  =  var.subnets 
+
+  subnet_id      = lookup(  aws_subnet.subnets , each.key ).id  
   route_table_id = aws_route_table.IG_route_table.id
 }

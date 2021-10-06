@@ -17,6 +17,15 @@ variable "networking" {
   }
 }
 
+variable "subnets" {
+  default = {
+    default_subnet = {
+      cidr_block           = "10.10.1.0/24"
+      availability_zone_id = "euc1-az1"
+      public               = true
+    }
+  }
+
 
 variable "kube_master" {
   default = {
