@@ -38,7 +38,7 @@
           }
         dest: /etc/docker/daemon.json
 
-    - name: Install  kubelet kubeadm kubectl
+    - name: Reload Docker service
       shell:
         cmd: |
           systemctl enable docker
