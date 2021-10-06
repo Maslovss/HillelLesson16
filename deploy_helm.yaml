@@ -1,6 +1,10 @@
 ---
 - hosts: master
   become: yes
+  vars:
+    - deploy_prosisioner: false
+    - deploy_prometheus: true
+
   tasks:
     - name: Install Helm
       shell:
@@ -17,6 +21,7 @@
           kubectl apply -f sig-storage-local-static-provisioner/deployment/kubernetes/example/default_example_storageclass.yaml
           helm template ./sig-storage-local-static-provisioner/helm/provisioner --values sig-storage-local-static-provisioner/helm/provisioner/values.yaml  --name-template=provisioner  > provisioner_generated.yaml
           kubectl create -f provisioner_generated.yaml -n kube-system
+      when: deploy_prosisioner|bool == true
 
     - copy:
         content: |
@@ -52,3 +57,4 @@
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
           helm install prometheus --values prom-val.yaml prometheus-community/kube-prometheus-stack -n monitoring
+      when: deploy_prometheus|bool == true
