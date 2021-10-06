@@ -3,7 +3,10 @@
   become: yes
   tasks:
     - name: Create mount folder
-      command: "mkdir -p /mnt/fast-disks"
+      shell:
+        cmd: |
+          mkdir -p /mnt/fast-disks
+          parted /dev/sda mklabel gpt
 
     - name: Prepare block volume
       shell:
