@@ -1,0 +1,19 @@
+---
+- hosts: workers
+  become: yes
+  vars:
+    - restart_host: false
+
+  tasks:
+    - set_fact:
+        join_command: "{{ lookup('file', 'join_cluster')  | trim }}"
+
+    - name: Wait for server to restart
+      reboot:
+        reboot_timeout: 3600
+      when: restart_host|bool == true
+
+    - name: Join cluster
+      command: "{{ join_command }}"
+
+

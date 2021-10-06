@@ -1,0 +1,20 @@
+---
+- hosts: master 
+  become: yes
+  tasks:
+    - name: Install Helm
+      shell:
+        cmd: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+
+    - name: Deploy local storage provisioner
+      shell:
+        cmd: |
+          mkdir -p /mnt/fast-disks
+          git clone https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner.git
+          kubectl apply -f sig-storage-local-static-provisioner/deployment/kubernetes/example/default_example_storageclass.yaml
+          helm template ./sig-storage-local-static-provisioner/helm/provisioner --values sig-storage-local-static-provisioner/helm/provisioner/values.yaml  --name-template=provisioner  > provisioner_generated.yaml
+          kubectl create -f provisioner_generated.yaml
+
