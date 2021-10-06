@@ -1,5 +1,5 @@
 ---
-- hosts: master
+- hosts: workers
   become: yes
   tasks:
     - name: Prepare block volume
