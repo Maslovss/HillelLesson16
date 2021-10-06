@@ -15,4 +15,5 @@
           mkfs.ext4 /dev/xvdb{{ item }}
           mkdir -p /mnt/fast-disks/drive{{ item }}
           echo "/dev/xvdb{{ item }}   /mnt/fast-disks/drive{{ item }}  ext4   defaults    0   0" >> /etc/fstab
+          mount /mnt/fast-disks/drive{{ item }}
       loop: "{{ range(1, 5)|list }}"
