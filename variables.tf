@@ -25,6 +25,7 @@ variable "subnets" {
       public               = true
     }
   }
+}
 
 
 variable "kube_master" {
