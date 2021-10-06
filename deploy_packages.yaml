@@ -1,16 +1,15 @@
 ---
-- hosts: all 
+- hosts: all
   become: yes
-  vars:
-    - delete_docker: true
-    - delete_docker_data: false
-    - install_docker: true
-    - perform_reboot: true
-    - jenkins_run_container: true
-    - jenkins_image_name: "jenkins/jenkins:latest"
-    - jenkins_folder: "/var/jenkins"
+  gather_facts: no
 
   tasks:
+    - name: Wait for system to become reachable
+      wait_for_connection:
+
+    - name: Gather facts for first time
+      setup:
+
     - name: Install Docker
       shell:
         cmd: |

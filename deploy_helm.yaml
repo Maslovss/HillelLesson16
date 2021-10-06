@@ -1,5 +1,5 @@
 ---
-- hosts: master 
+- hosts: master
   become: yes
   tasks:
     - name: Install Helm
@@ -16,5 +16,39 @@
           git clone https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner.git
           kubectl apply -f sig-storage-local-static-provisioner/deployment/kubernetes/example/default_example_storageclass.yaml
           helm template ./sig-storage-local-static-provisioner/helm/provisioner --values sig-storage-local-static-provisioner/helm/provisioner/values.yaml  --name-template=provisioner  > provisioner_generated.yaml
-          kubectl create -f provisioner_generated.yaml
+          kubectl create -f provisioner_generated.yaml -n kube-system
 
+    - copy:
+        content: |
+          alertmanager:
+            alertmanagerSpec:
+              ##
+              storage: {}
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: fast-disks
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 6Gi
+                selector: {}
+          prometheus:
+            prometheusSpec:
+              storageSpec: {}
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: fast-disks
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 6Gi
+                selector: {}
+        dest: /home/ubuntu/prom-val.yaml
+
+    - name: Deploy Prom
+      shell:
+        cmd: |
+          kubectl create namespace monitoring
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm repo update
+          helm install prometheus --values prom-val.yaml prometheus-community/kube-prometheus-stack -n monitoring
