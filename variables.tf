@@ -31,11 +31,13 @@ variable "kube_workers" {
     worker1 = {
       ami                    = "ami-05f7491af5eef733a"
       instance_type          = "t2.medium"
+      ebs_drive_size         = 20
     }
 
     worker2 = {
       ami                    = "ami-05f7491af5eef733a"
       instance_type          = "t2.medium"  
+      ebs_drive_size         = 20
     }
   }
 }
