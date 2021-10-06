@@ -28,26 +28,26 @@
           alertmanager:
             alertmanagerSpec:
               ##
-              storage: {}
-              volumeClaimTemplate:
-                spec:
-                  storageClassName: fast-disks
-                  accessModes: ["ReadWriteOnce"]
-                  resources:
-                    requests:
-                      storage: 6Gi
-                selector: {}
+              storage: 
+                volumeClaimTemplate:
+                  spec:
+                    storageClassName: fast-disks
+                    accessModes: ["ReadWriteOnce"]
+                    resources:
+                      requests:
+                        storage: 6Gi
+                  selector: {}
           prometheus:
             prometheusSpec:
-              storageSpec: {}
-              volumeClaimTemplate:
-                spec:
-                  storageClassName: fast-disks
-                  accessModes: ["ReadWriteOnce"]
-                  resources:
-                    requests:
-                      storage: 6Gi
-                selector: {}
+              storageSpec:
+                volumeClaimTemplate:
+                  spec:
+                    storageClassName: fast-disks
+                    accessModes: ["ReadWriteOnce"]
+                    resources:
+                      requests:
+                        storage: 6Gi
+                  selector: {}
         dest: /home/ubuntu/prom-val.yaml
 
     - name: Deploy Prom
