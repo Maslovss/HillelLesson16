@@ -33,7 +33,7 @@ kube_workers = {
   worker3 = {
     ami                 = "ami-05f7491af5eef733a"
     instance_type       = "t2.medium"  
-    ebs_drive_size       = 100    
+    ebs_drive_size       = 200    
   }
 }
 
