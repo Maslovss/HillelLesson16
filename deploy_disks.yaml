@@ -2,11 +2,14 @@
 - hosts: workers
   become: yes
   tasks:
+    - name: Create mount folder
+      command: "mkdir -p /mnt/fast-disks"
+
     - name: Prepare block volume
       shell:
         cmd: |
           parted /dev/xvdb --align opt mkpart primary  {{ (item - 1)*20 + 1  }}% {{ item*20  }}%
           mkfs.ext4 /dev/xvdb{{ item }}
-          mkdir /mnt/fast-disks/drive{{ item }}
+          mkdir -p /mnt/fast-disks/drive{{ item }}
           echo "/dev/xvdb{{ item }}   /mnt/fast-disks/drive{{ item }}  ext4   defaults    0   0" >> /etc/fstab
       loop: "{{ range(1, 6)|list }}"
