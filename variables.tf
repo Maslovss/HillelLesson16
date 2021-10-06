@@ -42,12 +42,14 @@ variable "kube_workers" {
       ami                    = "ami-05f7491af5eef733a"
       instance_type          = "t2.medium"
       ebs_drive_size         = 20
+      subnet                 = "default"
     }
 
     worker2 = {
       ami                    = "ami-05f7491af5eef733a"
       instance_type          = "t2.medium"  
       ebs_drive_size         = 20
+      subnet                 = "default"
     }
   }
 }
