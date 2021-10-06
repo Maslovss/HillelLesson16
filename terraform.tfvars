@@ -35,6 +35,19 @@ kube_workers = {
     instance_type       = "t2.medium"  
     ebs_drive_size       = 200    
   }
+
+  worker4 = {
+    ami                 = "ami-05f7491af5eef733a"
+    instance_type       = "t2.medium"  
+    ebs_drive_size       = 40    
+  }  
+
+  worker5 = {
+    ami                 = "ami-05f7491af5eef733a"
+    instance_type       = "t2.medium"  
+    ebs_drive_size       = 40    
+  }
+
 }
 
 

@@ -12,7 +12,7 @@
     - name: Prepare block volume
       shell:
         cmd: |
-          parted /dev/xvdb --align opt mkpart primary  {{ (item - 1)*20 + 1  }}% {{ item*20  }}%
+          parted /dev/xvdb --align opt mkpart primary  {{ (item - 1)*25 + 1  }}% {{ item*25  }}%
           sleep .5
           mkfs.ext4 /dev/xvdb{{ item }}
           mkdir -p /mnt/fast-disks/drive{{ item }}
