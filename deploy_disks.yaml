@@ -6,7 +6,7 @@
       shell:
         cmd: |
           mkdir -p /mnt/fast-disks
-          yes "i" | parted /dev/sda mklabel gpt
+          yes "i" | parted /dev/xvdb mklabel gpt
 
     - name: Prepare block volume
       shell:
