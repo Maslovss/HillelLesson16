@@ -2,7 +2,7 @@
 - hosts: master
   become: yes
   vars:
-    - deploy_prosisioner: false
+    - deploy_prosisioner: true
     - deploy_prometheus: true
 
   tasks:
@@ -36,7 +36,6 @@
                     resources:
                       requests:
                         storage: 6Gi
-                  selector: {}
           prometheus:
             prometheusSpec:
               storageSpec:
@@ -47,7 +46,6 @@
                     resources:
                       requests:
                         storage: 6Gi
-                  selector: {}
         dest: /home/ubuntu/prom-val.yaml
 
     - name: Deploy Prom
