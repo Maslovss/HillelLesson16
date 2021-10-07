@@ -27,7 +27,6 @@
         content: |
           alertmanager:
             alertmanagerSpec:
-              ##
               storage: 
                 volumeClaimTemplate:
                   spec:
@@ -35,7 +34,7 @@
                     accessModes: ["ReadWriteOnce"]
                     resources:
                       requests:
-                        storage: 6Gi
+                        storage: 3Gi
           prometheus:
             prometheusSpec:
               storageSpec:
@@ -45,7 +44,7 @@
                     accessModes: ["ReadWriteOnce"]
                     resources:
                       requests:
-                        storage: 6Gi
+                        storage: 3Gi
         dest: /home/ubuntu/prom-val.yaml
 
     - name: Deploy Prom
