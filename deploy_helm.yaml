@@ -2,7 +2,7 @@
 - hosts: master
   become: yes
   vars:
-    - deploy_prosisioner: 1
+    - deploy_prosisioner: true
     - deploy_prometheus: true
 
   tasks:
