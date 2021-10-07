@@ -53,13 +53,6 @@ kube_workers = {
     subnet              = "subnet2"    
   }
 
-  worker3 = {
-    ami                 = "ami-05f7491af5eef733a"
-    instance_type       = "t2.medium"  
-    ebs_drive_size       = 40    
-    subnet              = "subnet3"    
-  }  
-
 }
 
 
