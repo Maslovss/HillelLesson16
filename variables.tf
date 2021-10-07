@@ -17,6 +17,16 @@ variable "networking" {
   }
 }
 
+variable "subnets" {
+  default = {
+    default_subnet = {
+      cidr_block           = "10.10.1.0/24"
+      availability_zone_id = "euc1-az1"
+      public               = true
+    }
+  }
+}
+
 
 variable "kube_master" {
   default = {
@@ -31,11 +41,15 @@ variable "kube_workers" {
     worker1 = {
       ami                    = "ami-05f7491af5eef733a"
       instance_type          = "t2.medium"
+      ebs_drive_size         = 20
+      subnet                 = "default"
     }
 
     worker2 = {
       ami                    = "ami-05f7491af5eef733a"
       instance_type          = "t2.medium"  
+      ebs_drive_size         = 20
+      subnet                 = "default"
     }
   }
 }

@@ -3,7 +3,7 @@
   become: yes
   vars:
     - master_hostname: "k8s-master.local"
-    - restart_host: false
+    - restart_host: true 
     - reset_cluster: true
 
   tasks:

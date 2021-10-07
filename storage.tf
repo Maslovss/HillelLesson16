@@ -1,11 +1,27 @@
 
-resource "aws_ebs_volume" "example" {
-  availability_zone = "${aws_subnet.public_subnet.availability_zone}"
-  size              = 20
+resource "aws_ebs_volume" "volumes" {
+
+
+  for_each  =  var.kube_workers 
+
+  depends_on = [
+    aws_subnet.subnets
+  ]
+
+
+  availability_zone = lookup( aws_subnet.subnets , each.value.subnet ).availability_zone
+  size              = each.value.ebs_drive_size
 }
 
 resource "aws_volume_attachment" "ebs_att" {
+
+  for_each  =  var.kube_workers 
+
+  depends_on = [
+    aws_subnet.subnets
+  ]  
+
   device_name = "/dev/xvdb"
-  volume_id   = aws_ebs_volume.example.id
-  instance_id = aws_instance.master.id
+  volume_id   = lookup(aws_ebs_volume.volumes , each.key).id
+  instance_id = lookup(aws_instance.workers, each.key).id
 }

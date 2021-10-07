@@ -11,7 +11,7 @@ resource "aws_instance" "master" {
   key_name = var.key_name
 
   vpc_security_group_ids = [aws_security_group.sg_k8s.id]
-  subnet_id = aws_subnet.public_subnet.id
+  subnet_id = lookup ( aws_subnet.subnets , "default" ).id
 
   tags = var.tags  
 
@@ -41,7 +41,7 @@ resource "aws_instance" "workers" {
   key_name = var.key_name
 
   vpc_security_group_ids = [aws_security_group.sg_k8s.id]
-  subnet_id = aws_subnet.public_subnet.id
+  subnet_id =  lookup(  aws_subnet.subnets , each.value.subnet).id
 
   tags = var.tags  
 

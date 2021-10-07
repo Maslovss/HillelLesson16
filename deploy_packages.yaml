@@ -1,7 +1,14 @@
 ---
 - hosts: all
   become: yes
+  gather_facts: no
   tasks:
+    - name: Wait for system to become reachable
+      wait_for_connection:
+
+    - name: Gather facts for first time
+      setup:
+
     - name: Install Docker
       shell:
         cmd: |
@@ -30,7 +37,7 @@
           }
         dest: /etc/docker/daemon.json
 
-    - name: Install  kubelet kubeadm kubectl
+    - name: Reload Docker service
       shell:
         cmd: |
           systemctl enable docker

@@ -1,0 +1,22 @@
+---
+- hosts: workers
+  become: yes
+  tasks:
+    - name: Create mount folder
+      shell:
+        cmd: |
+          mkdir -p /mnt/fast-disks
+          yes "i" | parted /dev/xvdb mklabel gpt
+          sleep .5
+
+    - name: Prepare block volume
+      shell:
+        cmd: |
+          parted /dev/xvdb --align opt mkpart primary  {{ (item - 1)*25 + 1  }}% {{ item*25  }}%
+          sleep .5
+          mkfs.ext4 /dev/xvdb{{ item }}
+          mkdir -p /mnt/fast-disks/drive{{ item }}
+          echo "/dev/xvdb{{ item }}   /mnt/fast-disks/drive{{ item }}  ext4   defaults    0   0" >> /etc/fstab
+          mount /mnt/fast-disks/drive{{ item }}
+      loop: "{{ range(1, 5)|list }}"
+      ignore_errors: True
