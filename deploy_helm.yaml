@@ -20,7 +20,7 @@
           git clone https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner.git
           kubectl apply -f sig-storage-local-static-provisioner/deployment/kubernetes/example/default_example_storageclass.yaml
           helm template ./sig-storage-local-static-provisioner/helm/provisioner --values sig-storage-local-static-provisioner/helm/provisioner/values.yaml  --name-template=provisioner  > provisioner_generated.yaml
-          kubectl create -f provisioner_generated.yaml -n kube-system
+          kubectl create -f provisioner_generated.yaml
       when: deploy_prosisioner|bool == true
 
     - copy:
