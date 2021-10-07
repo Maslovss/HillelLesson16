@@ -1,5 +1,6 @@
 #!/bin/sh
 
+terraform init
 terraform apply -auto-approve
 
 ansible-playbook --private-key k8s_ssh_key.pem -u ubuntu -i aws_hosts deploy_packages.yaml
