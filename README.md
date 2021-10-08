@@ -73,5 +73,16 @@ local-pv-4f34c6ac   3806Mi     RWO            Delete           Bound       vault
 local-pv-8072df9    3806Mi     RWO            Delete           Available                                                                                                                               fast-disks              7m22s
 local-pv-ee300b32   9611Mi     RWO            Delete           Available                                                                                                                               fast-disks              7m22s
 
+ubuntu@k8s-master:~$ sudo helm list --all-namespaces
+NAME                    NAMESPACE               REVISION        UPDATED                                 STATUS          CHART                                                                                        APP VERSION
+cert-manager            cert-manager            1               2021-10-08 00:45:54.227104117 +0000 UTC deployed        cert-manager-v1.5.4                                                                          v1.5.4
+fleet                   cattle-fleet-system     2               2021-10-08 00:49:16.668419928 +0000 UTC deployed        fleet-100.0.0+up0.3.6                                                                        0.3.6
+fleet-agent-local       cattle-fleet-system     2               2021-10-08 00:49:33.832301382 +0000 UTC deployed        fleet-agent-local-v0.0.0+s-35dfbcb47baa590da154eddc444fe735621d85f0200606225be98d687ffa8
+fleet-crd               cattle-fleet-system     1               2021-10-08 00:48:47.44491879 +0000 UTC  deployed        fleet-crd-100.0.0+up0.3.6                                                                    0.3.6
+prometheus              monitoring              1               2021-10-08 00:45:30.141967744 +0000 UTC deployed        kube-prometheus-stack-19.0.2                                                                 0.50.0
+rancher                 cattle-system           1               2021-10-08 00:46:24.933141971 +0000 UTC deployed        rancher-2.6.0                                                                                v2.6.0
+rancher-webhook         cattle-system           1               2021-10-08 00:48:59.131263002 +0000 UTC deployed        rancher-webhook-1.0.0+up0.2.0                                                                0.2.0
+vault                   vault                   1               2021-10-08 00:48:32.878501138 +0000 UTC deployed        vault-0.16.1                                                                                 1.8.3
+
 
 ```
