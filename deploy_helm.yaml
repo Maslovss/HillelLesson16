@@ -4,6 +4,9 @@
   vars:
     - deploy_prosisioner: true
     - deploy_prometheus: true
+    - deploy_rancher: true
+    - deploy_vault: true
+    - rancher_host: k8.master.local
 
   tasks:
     - name: Install Helm
@@ -47,7 +50,7 @@
                         storage: 3Gi
         dest: /home/ubuntu/prom-val.yaml
 
-    - name: Deploy Prom
+    - name: Deploy prometheus
       shell:
         cmd: |
           kubectl create namespace monitoring
@@ -55,3 +58,43 @@
           helm repo update
           helm install prometheus --values prom-val.yaml prometheus-community/kube-prometheus-stack -n monitoring
       when: deploy_prometheus|bool == true
+
+    - name: Deploy Rancher
+      shell:
+        cmd: |
+          helm repo add jetstack https://charts.jetstack.io
+          helm upgrade --install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --set installCRDs=true
+          kubectl -n cert-manager rollout status deploy/cert-manager
+          kubectl -n cert-manager rollout status deploy/cert-manager-cainjector
+          kubectl -n cert-manager rollout status deploy/cert-manager-webhook
+          helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
+          helm upgrade --install rancher rancher-latest/rancher --namespace cattle-system --create-namespace --set hostname={{ rancher_host }}
+          kubectl -n cattle-system rollout status deploy/rancher
+      when: deploy_rancher|bool == true
+
+    - name: Get rancher password
+      command: "kubectl get secret --namespace cattle-system bootstrap-secret -o {% raw %} go-template='{{.data.bootstrapPassword|base64decode}}{{\"\\n\"}}{% endraw %}'"
+      register: rancher_password
+      when: deploy_rancher|bool == true
+    - debug:
+        msg: "Rancher password is: {{ rancher_password.stdout }}  "
+
+    - copy:
+        content: |
+          server:
+            dataStorage:
+              enabled: true
+              size: 2Gi
+              mountPath: "/vault/data"
+              storageClass: fast-disks
+              accessMode: ReadWriteOnce
+              annotations: {}
+        dest: /home/ubuntu/vault-values.yaml
+
+    - name: Deploy Hashicorp Vault
+      shell:
+        cmd: |
+          helm repo add hashicorp https://helm.releases.hashicorp.com
+          helm upgrade --install vault --values vault-values.yaml hashicorp/vault --namespace vault --create-namespace
+      when: deploy_vault|bool == true
+
