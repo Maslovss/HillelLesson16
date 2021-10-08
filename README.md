@@ -13,3 +13,7 @@
 ssh -i k8s_ssh_key.pem ubuntu@`awk '/master/{getline; print}' aws_hosts`
 ```
 
+### Requirements
+
+- Installed ansible
+- Installed and configured AWS CLI
