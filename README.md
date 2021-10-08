@@ -62,4 +62,16 @@ monitoring            prometheus-prometheus-node-exporter-s5m8j                1
 vault                 vault-0                                                  0/1     Running     0          2m56s
 vault                 vault-agent-injector-6d76cf96d4-59lbb                    1/1     Running     0          2m56s
 
+ubuntu@k8s-master:~$ sudo kubectl get pv
+NAME                CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM                                                                                                                       STORAGECLASS   REASON   AGE
+local-pv-274ab4d5   9610Mi     RWO            Delete           Bound       monitoring/alertmanager-prometheus-kube-prometheus-alertmanager-db-alertmanager-prometheus-kube-prometheus-alertmanager-0   fast-disks              7m22s
+local-pv-32e3a7f7   3806Mi     RWO            Delete           Available                                                                                                                               fast-disks              7m22s
+local-pv-3f0d4a5c   9611Mi     RWO            Delete           Available                                                                                                                               fast-disks              7m22s
+local-pv-43cb7b7    9611Mi     RWO            Delete           Available                                                                                                                               fast-disks              7m22s
+local-pv-4e48465a   3805Mi     RWO            Delete           Bound       monitoring/prometheus-prometheus-kube-prometheus-prometheus-db-prometheus-prometheus-kube-prometheus-prometheus-0           fast-disks              7m22s
+local-pv-4f34c6ac   3806Mi     RWO            Delete           Bound       vault/data-vault-0                                                                                                          fast-disks              7m22s
+local-pv-8072df9    3806Mi     RWO            Delete           Available                                                                                                                               fast-disks              7m22s
+local-pv-ee300b32   9611Mi     RWO            Delete           Available                                                                                                                               fast-disks              7m22s
+
+
 ```
