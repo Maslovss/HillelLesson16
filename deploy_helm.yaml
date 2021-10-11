@@ -82,13 +82,19 @@
     - copy:
         content: |
           server:
+            service:
+              enabled: true
+              type: NodePort
+              nodePort: 30001
+              port: 8200
+              targetPort: 8200
+
             dataStorage:
               enabled: true
               size: 2Gi
               mountPath: "/vault/data"
               storageClass: fast-disks
               accessMode: ReadWriteOnce
-              annotations: {}
         dest: /home/ubuntu/vault-values.yaml
 
     - name: Deploy Hashicorp Vault
